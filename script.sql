@@ -19,6 +19,8 @@ create table Countries(
 
 --hacemos una insersion de prueba en la tabla paises
 insert into Countries(ISO3, Name) values('SLV', 'El Salvador');
+insert into Countries(ISO3, Name) values('GTM', 'Guatemala');
+insert into Countries(ISO3, Name) values('HND', 'Honduras');
 
 --verificamos
 select ISO3, Name from Countries;
@@ -70,7 +72,7 @@ select * from Patients;
 	constraint PK_MedicalHistory primary key(Id)
  );
 
--- Tabla relacional entre médico, paciente e historia médica
+-- Tabla relacional entre mï¿½dico, paciente e historia mï¿½dica
  create table DoctorPatientHistory(
 	MedicalHistoryId int not null,
 	PatientId int not null,

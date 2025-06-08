@@ -50,7 +50,7 @@ create table Patients(
 --verificamos la insercion
 select * from Patients;
  
- --aun no se han ejecutado los siguientes comandos sql
+ 
  --creamos la tabla de doctor
  create table Doctors(
 	Id int not null identity(1,1),
@@ -63,6 +63,18 @@ select * from Patients;
 
 	constraint PK_Doctors primary key(Id)
  );
+
+ INSERT INTO Doctors (Name, Lastname, Specialty, Email, Phone)
+VALUES 
+('Ana', 'Ramírez', 'Cardiología', 'ana.ramirez@medcenter.com', '7722-3344'),
+('Carlos', 'Gómez', 'Neurología', 'carlos.gomez@medcenter.com', '7555-1122'),
+('María', 'López', 'Pediatría', 'maria.lopez@medcenter.com', '7688-9911'),
+('Luis', 'Martínez', 'Dermatología', 'luis.martinez@medcenter.com', '7233-5566'),
+('Gabriela', 'Castro', 'Ginecología', 'gabriela.castro@medcenter.com', '7890-1122');
+
+--comprobamos que se cargasen los datos
+SELECT Id, Name, Lastname, Specialty, Email, Phone, RegistrationDate
+FROM Doctors;
 
  --creamos la tabla de historial medico
  create table MedicalHistory(
@@ -88,8 +100,36 @@ select * from Patients;
 
  );
 
+ --creamos la tabla de citas la cual en otra tabla aparte se relacionada con el paciente y el doctor
+ create table Appointments (
+    Id int not null identity(1,1),
+    AppointmentDate datetime not null,
+    Status smallint not null, -- Ej: Pendiente = 1, Confirmada = 2, Cancelada = 3, Atendida = 4
+    Observations varchar(1000) NULL,
+    CreatedAt datetime not null default getdate(),
+
+    constraint PK_Appointments primary key(Id)
+);
+
+--aun no se hace el insert
+insert into Appointments (AppointmentDate, Status, Observations)
+	values ('2025-06-20 09:30', 1, 'Consulta por dolor de cabeza');
+
+--creamos tabla de relacion entre citas, paciente y doctor
+create table DoctorPatientAppointments(
+	DoctorId int not null,
+	PatientId int not null,
+	AppointmentId int not null,
+
+	constraint PK_DoctorPatientAppointments primary key(DoctorId, PatientId, AppointmentId),
+	constraint FK_PK_DoctorPatientAppointments_Doctors foreign key(DoctorId) references Doctors(Id),
+	constraint FK_PK_DoctorPatientAppointments_Patients foreign key(PatientId) references Patients(Id),
+	constraint FK_PK_DoctorPatientAppointments_Appointments foreign key(AppointmentId) references Appointments(Id)
+
+);
+
 -- Ver tablas
-SELECT name FROM sys.tables;
+select name from sys.tables;
 
 -- Ver columnas de DoctorPatientHistory
-EXEC sp_columns DoctorPatientHistory;
+exec sp_columns DoctorPatientHistory;
